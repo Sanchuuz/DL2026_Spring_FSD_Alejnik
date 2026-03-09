@@ -1,7 +1,15 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
+const mongoose = require('mongoose');
+const Meme = require('./models/Meme');
 require('dotenv').config();
+
+// Подключаемся к локальной базе
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log('🚀 База данных подключена локально!'))
+  .catch((err) => console.error('❌ Ошибка подключения к базе:', err));
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -37,15 +45,18 @@ app.get('/api/weather', async (req, res) => {
       condition: response.data.weather[0].main, // Понадобится позже для подбора мема
     };
 
-    res.json(data);
+    const matchedMeme = await Meme.findOne({ condition: data.condition });
+
+    res.json({
+      ...data,
+      meme: matchedMeme,
+    });
   } catch (error) {
     // Обработка ошибок (например, если город не найден)
     if (error.response && error.response.status === 404) {
-      res
-        .status(404)
-        .json({
-          message: 'Город не найден. Проверьте правильность написания.',
-        });
+      res.status(404).json({
+        message: 'Город не найден. Проверьте правильность написания.',
+      });
     } else {
       res
         .status(500)
