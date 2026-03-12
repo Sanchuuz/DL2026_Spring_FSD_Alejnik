@@ -42,14 +42,23 @@ app.get('/api/weather', async (req, res) => {
       city: response.data.name,
       temp: response.data.main.temp,
       description: response.data.weather[0].description,
-      condition: response.data.weather[0].main, // Понадобится позже для подбора мема
+      condition: response.data.weather[0].main,
     };
 
-    const matchedMeme = await Meme.findOne({ condition: data.condition });
+    const matchedMemes = await Meme.find({ condition: data.condition });
+
+    let selectedMeme = null;
+
+    if (matchedMemes.length > 0) {
+      const randomIndex = Math.floor(Math.random() * matchedMemes.length);
+      selectedMeme = matchedMemes[randomIndex];
+    } else {
+      selectedMeme = await Meme.findOne({ condition: 'Default' });
+    }
 
     res.json({
       ...data,
-      meme: matchedMeme,
+      meme: selectedMeme,
     });
   } catch (error) {
     // Обработка ошибок (например, если город не найден)
