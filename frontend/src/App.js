@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './App.css';
+import WeatherCard from './components/WeatherCard';
+import MemeDisplay from './components/MemeDisplay';
 
 function App() {
   const [city, setCity] = useState('');
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   const fetchWeather = async () => {
     if (!city) return;
@@ -32,6 +42,7 @@ function App() {
       <div className="input-group">
         <input
           type="text"
+          ref={inputRef}
           value={city}
           onChange={(e) => setCity(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && fetchWeather()}
@@ -48,27 +59,8 @@ function App() {
 
       {weatherData && !loading && (
         <div className="result fade-in">
-          <h2>
-            {weatherData.city}: {Math.round(weatherData.temp)}°C
-          </h2>
-          <p className="description">{weatherData.description}</p>
-
-          {weatherData.meme && (
-            <div className="meme-section">
-              <img
-                src={weatherData.meme.imageUrl}
-                alt="Weather Meme"
-                className="meme-image"
-              />
-              <p className="meme-text">
-                <i>
-                  {weatherData.meme.text.includes('%CITY%')
-                    ? weatherData.meme.text.replace('%CITY%', weatherData.city)
-                    : weatherData.meme.text}
-                </i>
-              </p>
-            </div>
-          )}
+          <WeatherCard data={weatherData} />
+          <MemeDisplay meme={weatherData.meme} city={weatherData.city} />
         </div>
       )}
     </div>
