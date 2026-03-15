@@ -74,6 +74,19 @@ app.get('/api/weather', async (req, res) => {
   }
 });
 
+app.patch('/api/memes/:id/like', async (req, res) => {
+  try {
+    const meme = await Meme.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { likes: 1 } },
+      { new: true },
+    );
+    res.json(meme);
+  } catch (err) {
+    res.status(500).json({ message: 'Ошибка при сохранении лайка' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);
 });

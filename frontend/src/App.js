@@ -23,16 +23,20 @@ function App() {
 
     setLoading(true);
     setError('');
-    setWeatherData(null);
 
     try {
       const response = await axios.get(`/api/weather?city=${city}`);
       setWeatherData(response.data);
     } catch (err) {
       setError(err.response?.data?.message || 'Ошибка при получении данных');
+      setWeatherData(null);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRefreshMeme = () => {
+    fetchWeather();
   };
 
   return (
@@ -60,7 +64,11 @@ function App() {
       {weatherData && !loading && (
         <div className="result fade-in">
           <WeatherCard data={weatherData} />
-          <MemeDisplay meme={weatherData.meme} city={weatherData.city} />
+          <MemeDisplay
+            meme={weatherData.meme}
+            city={weatherData.city}
+            onRefresh={handleRefreshMeme}
+          />
         </div>
       )}
     </div>
