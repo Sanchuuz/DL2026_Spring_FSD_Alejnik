@@ -74,6 +74,54 @@ app.get('/api/weather', async (req, res) => {
   }
 });
 
+app.get('/api/forecast', async (req, res) => {
+  const { city } = req.query;
+  const apiKey = process.env.WEATHER_API_KEY;
+
+  if (!city) return res.status(400).json({ message: 'Город не указан' });
+
+  try {
+    const response = await axios.get(
+      `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric&lang=ru`,
+    );
+
+    // Фильтруем данные: берем только прогнозы на 12:00 дня
+    // Это позволит нам получить четкие предсказания на следующие дни
+    const dailyData = response.data.list.filter((reading) =>
+      reading.dt_txt.includes('12:00:00'),
+    );
+
+    // Для каждого дня прогноза ищем подходящий мем в нашей базе
+    const forecastWithMemes = await Promise.all(
+      dailyData.slice(0, 3).map(async (day) => {
+        const condition = day.weather[0].main;
+
+        // Ищем случайный мем для этой погоды
+        const matchedMemes = await Meme.find({ condition });
+        const selectedMeme =
+          matchedMemes.length > 0
+            ? matchedMemes[Math.floor(Math.random() * matchedMemes.length)]
+            : await Meme.findOne({ condition: 'Default' });
+
+        return {
+          date: day.dt_txt,
+          temp: day.main.temp,
+          condition: condition,
+          description: day.weather[0].description,
+          meme: selectedMeme,
+        };
+      }),
+    );
+
+    res.json({
+      city: response.data.city.name,
+      forecast: forecastWithMemes,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Ошибка при получении прогноза' });
+  }
+});
+
 app.patch('/api/memes/:id/like', async (req, res) => {
   try {
     const meme = await Meme.findByIdAndUpdate(

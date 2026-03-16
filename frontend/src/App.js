@@ -3,12 +3,14 @@ import axios from 'axios';
 import './App.css';
 import WeatherCard from './components/WeatherCard';
 import MemeDisplay from './components/MemeDisplay';
+import Forecast from './components/Forecast';
 
 function App() {
   const [city, setCity] = useState('');
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [forecastData, setForecastData] = useState(null);
 
   const inputRef = useRef(null);
 
@@ -25,11 +27,13 @@ function App() {
     setError('');
 
     try {
-      const response = await axios.get(`/api/weather?city=${city}`);
-      setWeatherData(response.data);
+      const weatherRes = await axios.get(`/api/weather?city=${city}`);
+      setWeatherData(weatherRes.data);
+
+      const forecastRes = await axios.get(`/api/forecast?city=${city}`);
+      setForecastData(forecastRes.data.forecast);
     } catch (err) {
       setError(err.response?.data?.message || 'Ошибка при получении данных');
-      setWeatherData(null);
     } finally {
       setLoading(false);
     }
@@ -70,6 +74,10 @@ function App() {
             onRefresh={handleRefreshMeme}
           />
         </div>
+      )}
+
+      {forecastData && weatherData && (
+        <Forecast data={forecastData} city={weatherData.city} />
       )}
     </div>
   );
