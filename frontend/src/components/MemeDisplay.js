@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MemeDisplay = ({ meme, city, onRefresh }) => {
+const MemeDisplay = ({ meme, allMemes, city, onRefresh, onSelect }) => {
   if (!meme) return null;
 
   const displayText = meme.text.includes('%CITY%')
@@ -33,23 +33,47 @@ const MemeDisplay = ({ meme, city, onRefresh }) => {
   };
 
   return (
-    <div className="meme-section fadeIn">
-      <img src={meme.imageUrl} alt="Weather Meme" className="meme-image" />
-      <p className="meme-text">
-        <i>{displayText}</i>
-      </p>
+    <div className="meme-section fade-in">
+      <div className="main-meme-container">
+        <img src={meme.imageUrl} alt="Weather Meme" className="meme-image" />
+        <p className="meme-text">
+          <i>{displayText}</i>
+        </p>
+      </div>
 
       <div className="meme-actions">
         <button className="meme-btn" onClick={handleLike} title="Лайк">
           ❤️
         </button>
-        <button className="meme-btn" onClick={onRefresh} title="Другой мем">
+        <button
+          className="meme-btn"
+          onClick={onRefresh}
+          title="Загрузить другие варианты"
+        >
           🔄
         </button>
         <button className="meme-btn" onClick={handleShare} title="Поделиться">
           🔗
         </button>
       </div>
+
+      {allMemes && allMemes.length > 1 && (
+        <div className="meme-selector">
+          <p className="selector-title">Выбери своё настроение:</p>
+          <div className="meme-thumbnails">
+            {allMemes.map((m) => (
+              <div
+                key={m._id}
+                className={`thumbnail-wrapper ${m._id === meme._id ? 'active' : ''}`}
+                onClick={() => onSelect(m)}
+              >
+                <img src={m.imageUrl} alt="Option" className="meme-thumbnail" />
+                {m._id === meme._id && <div className="active-badge">✓</div>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

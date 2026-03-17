@@ -25,18 +25,32 @@ function App() {
 
     setLoading(true);
     setError('');
+    setForecastData(null);
 
     try {
       const weatherRes = await axios.get(`/api/weather?city=${city}`);
-      setWeatherData(weatherRes.data);
+
+      setWeatherData({
+        ...weatherRes.data,
+        selectedMeme: weatherRes.data.memes[0],
+      });
 
       const forecastRes = await axios.get(`/api/forecast?city=${city}`);
       setForecastData(forecastRes.data.forecast);
     } catch (err) {
+      console.error(err);
       setError(err.response?.data?.message || 'Ошибка при получении данных');
+      setWeatherData(null);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSelectMeme = (meme) => {
+    setWeatherData((prev) => ({
+      ...prev,
+      selectedMeme: meme,
+    }));
   };
 
   const handleRefreshMeme = () => {
@@ -61,22 +75,29 @@ function App() {
         </button>
       </div>
 
-      {loading && <div className="loader"></div>}
+      {loading && (
+        <div className="loader-container">
+          <div className="loader"></div>
+        </div>
+      )}
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <div className="error-message fade-in">{error}</div>}
 
       {weatherData && !loading && (
         <div className="result fade-in">
           <WeatherCard data={weatherData} />
+
           <MemeDisplay
-            meme={weatherData.meme}
+            meme={weatherData.selectedMeme}
+            allMemes={weatherData.memes}
             city={weatherData.city}
             onRefresh={handleRefreshMeme}
+            onSelect={handleSelectMeme}
           />
         </div>
       )}
 
-      {forecastData && weatherData && (
+      {forecastData && weatherData && !loading && (
         <Forecast data={forecastData} city={weatherData.city} />
       )}
     </div>

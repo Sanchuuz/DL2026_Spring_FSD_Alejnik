@@ -10,36 +10,17 @@
   color: #2c3e50;
 }
 
+h1 {
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .input-group {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 20px;
   width: 100%;
-}
-
-.result {
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  margin-top: 30px;
-  max-width: 400px;
-  width: 100%;
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-.result h2 {
-  margin: 0;
-  font-size: 1.8rem;
-}
-
-.description {
-  text-transform: capitalize;
-  margin: 10px 0;
-  color: #777;
-  letter-spacing: 1px;
-  font-weight: 500;
 }
 
 input {
@@ -50,6 +31,7 @@ input {
   outline: none;
   width: 200px;
   font-size: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 button {
@@ -75,7 +57,34 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.meme-section img {
+.result {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+  max-width: 420px;
+  width: 100%;
+}
+
+.result h2 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.description {
+  text-transform: capitalize;
+  margin: 10px 0;
+  color: #777;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+.meme-section {
+  width: 100%;
+}
+
+.meme-image {
   border-radius: 15px;
   margin-top: 15px;
   border: 4px solid #f9f9f9;
@@ -93,6 +102,161 @@ button:disabled {
   padding: 0 10px;
 }
 
+.meme-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin: 25px 0;
+}
+
+.meme-btn {
+  border-radius: 50% !important;
+  width: 50px !important;
+  height: 50px !important;
+  padding: 0 !important;
+  background-color: white !important;
+  color: #333 !important;
+  border: 1px solid #eee !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease !important;
+}
+
+.meme-btn:hover {
+  background-color: #f8f9fa !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1) !important;
+  border-color: #4facfe !important;
+}
+
+.meme-selector {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.selector-title {
+  font-size: 0.85rem;
+  color: #999;
+  margin-bottom: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.meme-thumbnails {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.thumbnail-wrapper {
+  position: relative;
+  width: 65px;
+  height: 65px;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  border: 3px solid transparent;
+  background: #f0f0f0;
+}
+
+.thumbnail-wrapper:hover {
+  transform: scale(1.1);
+}
+
+.thumbnail-wrapper.active {
+  border-color: #4facfe;
+  box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+}
+
+.meme-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.active-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #4facfe;
+  color: white;
+  font-size: 12px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.forecast-section {
+  margin-top: 30px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.forecast-section h3 {
+  color: white;
+  margin-bottom: 20px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.forecast-container {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.forecast-card {
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  width: 150px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.forecast-card:hover {
+  transform: translateY(-5px);
+}
+
+.forecast-card img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.forecast-date {
+  font-weight: bold;
+  font-size: 0.85rem;
+  color: #4facfe;
+  text-transform: uppercase;
+}
+
+.forecast-meme-text {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 8px;
+  line-height: 1.3;
+}
+
+.loader-container {
+  margin: 40px 0;
+}
+
 .loader {
   border: 4px solid rgba(255, 255, 255, 0.3);
   border-top: 4px solid #ffffff;
@@ -100,7 +264,7 @@ button:disabled {
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
-  margin: 30px auto;
+  margin: 0 auto;
 }
 
 @keyframes spin {
@@ -113,14 +277,17 @@ button:disabled {
 }
 
 .error-message {
-  background: rgba(255, 107, 107, 0.15);
+  background: rgba(255, 107, 107, 0.2);
   color: #d63031;
   padding: 15px 25px;
   border-radius: 12px;
   margin-top: 30px;
   font-weight: 500;
   border: 1px solid rgba(255, 107, 107, 0.3);
-  animation: fadeIn 0.3s ease;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
 @keyframes fadeIn {
@@ -134,80 +301,12 @@ button:disabled {
   }
 }
 
-.meme-actions {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  margin-top: 25px;
+.forecast-card:nth-child(1) {
+  animation-delay: 0.1s;
 }
-
-.meme-btn {
-  border-radius: 50% !important;
-  width: 50px !important;
-  height: 50px !important;
-  padding: 0 !important;
-
-  background-color: white !important;
-  color: #333 !important;
-  border: 1px solid #eee !important;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+.forecast-card:nth-child(2) {
+  animation-delay: 0.2s;
 }
-
-.meme-btn:hover {
-  background-color: #f8f9fa !important;
-  transform: translateY(-3px) !important;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1) !important;
-  border-color: #4facfe !important;
-}
-
-.meme-btn i {
-  font-style: normal;
-}
-
-.forecast-container {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 20px;
-}
-
-.forecast-card {
-  background: white;
-  border-radius: 15px;
-  padding: 15px;
-  width: 160px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  text-align: center;
-  transition: transform 0.3s ease;
-}
-
-.forecast-card:hover {
-  transform: translateY(-5px);
-}
-
-.forecast-card img {
-  width: 100%;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin: 10px 0;
-}
-
-.forecast-date {
-  font-weight: bold;
-  font-size: 0.9rem;
-  color: #4facfe;
-  text-transform: uppercase;
-}
-
-.forecast-meme-text {
-  font-size: 0.75rem;
-  color: #666;
-  margin-top: 8px;
+.forecast-card:nth-child(3) {
+  animation-delay: 0.3s;
 }

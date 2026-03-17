@@ -23,7 +23,6 @@ app.get('/api/weather', async (req, res) => {
   const city = req.query.city;
   const apiKey = process.env.WEATHER_API_KEY;
 
-  // Проверка: ввел ли пользователь название города
   if (!city) {
     return res
       .status(400)
@@ -31,13 +30,10 @@ app.get('/api/weather', async (req, res) => {
   }
 
   try {
-    // Делаем запрос к OpenWeatherMap
-    // units=metric нужен для получения градусов Цельсия
     const response = await axios.get(
       `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=ru`,
     );
 
-    // Извлекаем только нужные нам данные
     const data = {
       city: response.data.name,
       temp: response.data.main.temp,
@@ -45,27 +41,26 @@ app.get('/api/weather', async (req, res) => {
       condition: response.data.weather[0].main,
     };
 
-    const matchedMemes = await Meme.find({ condition: data.condition });
+    // Находим ВСЕ мемы для этой погоды
+    let matchedMemes = await Meme.find({ condition: data.condition });
 
-    let selectedMeme = null;
-
-    if (matchedMemes.length > 0) {
-      const randomIndex = Math.floor(Math.random() * matchedMemes.length);
-      selectedMeme = matchedMemes[randomIndex];
-    } else {
-      selectedMeme = await Meme.findOne({ condition: 'Default' });
+    // Если мемов для такой погоды нет, берем дефолтные
+    if (matchedMemes.length === 0) {
+      matchedMemes = await Meme.find({ condition: 'Default' });
     }
 
+    // Возвращаем данные о погоде и массив мемов (ограничим до 4-х для интерфейса)
     res.json({
       ...data,
-      meme: selectedMeme,
+      memes: matchedMemes.slice(0, 4),
     });
   } catch (error) {
-    // Обработка ошибок (например, если город не найден)
     if (error.response && error.response.status === 404) {
-      res.status(404).json({
-        message: 'Город не найден. Проверьте правильность написания.',
-      });
+      res
+        .status(404)
+        .json({
+          message: 'Город не найден. Проверьте правильность написания.',
+        });
     } else {
       res
         .status(500)
